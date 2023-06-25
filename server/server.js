@@ -1,5 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
+const User = require('./models/User');
+const config = require('./config.json');
 const app = express();
 const cors = require('cors');
 const port = 3000;
@@ -29,13 +33,14 @@ const optionSchema = new mongoose.Schema({
 connectDB();
 
 app.use(cors());
+app.use(express.json());
 
 
 app.get('/', (req, res) => {
   res.send('Hello from Express!');
 });
 
-app.get('/api/options', async (req,res) => {
+app.get('/options', async (req,res) => {
     try {
         const options = await Option.find({});
         res.json(options);
@@ -45,26 +50,99 @@ app.get('/api/options', async (req,res) => {
       }
 });
 
+
+app.post('/signup', async (req,res) => {
+
+    const { name, email, password } = req.body;
+    console.log('signup data received!');
+
+    try{
+            // Check if user already exists
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+            }
+
+            // Generate salt
+            const salt = await bcrypt.genSalt(10);
+
+            // Hash the password with the generated salt
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            // Create a new user with the hashed password
+            const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
+            });
+
+            // Save the user to the database
+            const savedUser = await newUser.save();
+
+            // Send verification email
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                  user: config.emailAccount,
+                  pass: config.emailPassword, 
+                },
+            });
+  
+             const mailOptions = {
+                from: config.emailAccount,
+                to: email,
+                subject: 'Account Verification',
+                text: 'Please verify your account by clicking the following link: http://localhost:3000/verify',
+                // You can also include an HTML version of the email with a link/button styled as a hyperlink
+            };
+  
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                 console.error('Error sending verification email:', error);
+                //  res.status(201).json({message: `error in sending verification email ${error}`})
+                } else {
+                console.log('Verification email sent:', info.response);
+                }
+            });
+  
+            // Return a success response
+            res.status(200).json({ message: 'User registered successfully!' });
+
+    } catch (error) {
+
+        // Handle any errors
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+
+    }
+
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
 
-const optionData = [
-    '1 - Find your mission',
-    '2 - Address your fears',
-    '3 - Deepen your relationships',
-    '4 - Design your roadmap of possibilities',
-    '5 - Create your legacy',
-];
+
+//old code - to be archived
+
+// const optionData = [
+//     '1 - Find your mission',
+//     '2 - Address your fears',
+//     '3 - Deepen your relationships',
+//     '4 - Design your roadmap of possibilities',
+//     '5 - Create your legacy',
+// ];
 
 
-const optionData1 = [
-    {id: 1, desc:'Find your mission'},
-    {id: 2, desc:'Address your fears'},
-    {id: 3, desc:'Deepen your relationships'},
-    {id: 4, desc:'Design your roadmap of possibilities'},
-    {id: 5, desc:'Create your legacy'},
-]
+// const optionData1 = [
+//     {id: 1, desc:'Find your mission'},
+//     {id: 2, desc:'Address your fears'},
+//     {id: 3, desc:'Deepen your relationships'},
+//     {id: 4, desc:'Design your roadmap of possibilities'},
+//     {id: 5, desc:'Create your legacy'},
+// ]
 
 // atulcp2001deploy2db: zCZPzqQy5IQN0GIr
