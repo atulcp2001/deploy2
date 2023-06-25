@@ -3,17 +3,17 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const User = require('./models/User');
-const config = require('./config.json');
 const app = express();
 const cors = require('cors');
 const port = 3000;
-const MONGO_URI = 'mongodb+srv://atulcp2001deploy2db:zCZPzqQy5IQN0GIr@cluster0.vkyq1pm.mongodb.net/deploy2db?retryWrites=true&w=majority'
+const emailAccount = process.env.EMAIL_ACCOUNT;
+const emailPassword = process.env.EMAIL_PASSWORD;
 
 // Connect to MongoDB Atlas
 const connectDB = async () => {
 
         try {
-            const conn = await mongoose.connect(MONGO_URI);
+            const conn = await mongoose.connect(process.env.MONGO_URI);
             console.log(`Mongo DB connected: ${conn.connection.host}`)
         } catch (error) {
             console.error(`Error: ${error.message}`);
@@ -85,13 +85,13 @@ app.post('/signup', async (req,res) => {
                 port: 465,
                 secure: true,
                 auth: {
-                  user: config.emailAccount,
-                  pass: config.emailPassword, 
+                  user: emailAccount,
+                  pass: emailPassword, 
                 },
             });
   
              const mailOptions = {
-                from: config.emailAccount,
+                from: emailAccount,
                 to: email,
                 subject: 'Account Verification',
                 text: 'Please verify your account by clicking the following link: http://localhost:3000/verify',
@@ -123,26 +123,3 @@ app.post('/signup', async (req,res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-
-
-//old code - to be archived
-
-// const optionData = [
-//     '1 - Find your mission',
-//     '2 - Address your fears',
-//     '3 - Deepen your relationships',
-//     '4 - Design your roadmap of possibilities',
-//     '5 - Create your legacy',
-// ];
-
-
-// const optionData1 = [
-//     {id: 1, desc:'Find your mission'},
-//     {id: 2, desc:'Address your fears'},
-//     {id: 3, desc:'Deepen your relationships'},
-//     {id: 4, desc:'Design your roadmap of possibilities'},
-//     {id: 5, desc:'Create your legacy'},
-// ]
-
-// atulcp2001deploy2db: zCZPzqQy5IQN0GIr

@@ -3,3 +3,5 @@
 # Ignore following files
 node_modules
 config.json
+email.js
+.env
