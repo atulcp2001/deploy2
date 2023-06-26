@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const serverUrl = process.env.REACT_APP_SERVER_URL;
+const serverUrl = "https://deploy2be.onrender.com";
 
 const SignupPage = () => {
   const [name, setName] = useState('');
