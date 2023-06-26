@@ -1,3 +1,5 @@
+const path = require('path');
+// require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -5,7 +7,7 @@ const nodemailer = require('nodemailer');
 const User = require('./models/User');
 const app = express();
 const cors = require('cors');
-const port = 3000;
+const port = process.env.PORT|| 3000;
 const emailAccount = process.env.EMAIL_ACCOUNT;
 const emailPassword = process.env.EMAIL_PASSWORD;
 
@@ -30,6 +32,9 @@ const optionSchema = new mongoose.Schema({
   // Define a model for the options collection
   const Option = mongoose.model('Option', optionSchema, 'options');
 
+console.log('I am running before connectDB');
+console.log(process.env.EMAIL_ACCOUNT);
+console.log(process.env.EMAIL_PASSWORD);
 connectDB();
 
 app.use(cors());

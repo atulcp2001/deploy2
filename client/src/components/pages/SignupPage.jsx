@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const serverUrl = process.env.REACT_APP_SERVER_URL;
+const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3000' ;
 
 const SignupPage = () => {
   const [name, setName] = useState('');
@@ -9,10 +9,11 @@ const SignupPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     try {
       // Make a POST request to the server to signup
-      console.log(`Sending signup data to server: name: ${name}, email: ${email}, password: ${password}`)
+      // console.log(`Sending signup data to server: name: ${name}, email: ${email}, password: ${password}`)
+      // console.log(serverUrl);
       const response = await fetch(`${serverUrl}/signup`, {
         method: 'POST',
         headers: {

@@ -6,7 +6,7 @@ import SignupPage from './components/pages/SignupPage'
 const App = () => {
 
     return(
-        <div className='h-full w-full text-center mx-auto py-10 font-bold bg-slate-900'>
+        <div className='h-full w-full text-center mx-auto py-10 font-bold bg-gray-900'>
             <SignupPage />
         </div>
         
