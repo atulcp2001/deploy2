@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3000' ;
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 const SignupPage = () => {
   const [name, setName] = useState('');

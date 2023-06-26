@@ -32,9 +32,6 @@ const optionSchema = new mongoose.Schema({
   // Define a model for the options collection
   const Option = mongoose.model('Option', optionSchema, 'options');
 
-console.log('I am running before connectDB');
-console.log(process.env.EMAIL_ACCOUNT);
-console.log(process.env.EMAIL_PASSWORD);
 connectDB();
 
 app.use(cors());
