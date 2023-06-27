@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-const serverUrl = "https://deploy2be.onrender.com";
+const serverUrl = "https://deploy2be.onrender.com"; // for production deployment
+// const serverUrl = "http://localhost:3000"; // for development
 
 const SignupPage = () => {
   const [name, setName] = useState('');
