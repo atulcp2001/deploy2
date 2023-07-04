@@ -119,6 +119,14 @@ function sendResetPasswordEmail(email, resetToken) {
   //
 connectDB();
 
+// Serve static files (e.g., CSS, JavaScript) from the "build" folder
+app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+
+// Catch-all route to serve the "index.html" file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+});
+
 // app.use(cors({origin: 'http://localhost:3001', credentials: true}));
 app.use(cors({origin: `${clientUrl}`, credentials: true}));
 app.use(express.json());

@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+const serverUrl = "https://deploy2be.onrender.com"; // for production deployment
+// const serverUrl = "http://localhost:3000"; // for development
+
 const VerifiedPage = () => {
 
     const navigate = useNavigate();
@@ -11,6 +14,30 @@ const VerifiedPage = () => {
     const redirectTimeout = setTimeout(() => {
       navigate('/user-profile');
     }, 10000);
+
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch(`${serverUrl}/protected`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          // User is authenticated, clear the redirect timeout and redirect to the profile page
+          clearTimeout(redirectTimeout);
+          navigate('/user-profile');
+        } else {
+          // User is not authenticated, redirect to the login page
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle the error, display a message, or perform any necessary action
+      }
+    };
+
+    checkAuthentication();
+
 
     return () => {
       clearTimeout(redirectTimeout);
