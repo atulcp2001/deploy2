@@ -122,10 +122,10 @@ connectDB();
 // Serve static files (e.g., CSS, JavaScript) from the "build" folder
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
-// Catch-all route to serve the "index.html" file
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
-});
+// // // Catch-all route to serve the "index.html" file
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+// });
 
 // app.use(cors({origin: 'http://localhost:3001', credentials: true}));
 app.use(cors({origin: `${clientUrl}`, credentials: true}));
@@ -209,10 +209,12 @@ app.post('/signup', async (req,res) => {
 
 
 // Verify user account endpoint
-app.get('/verify/:verificationToken', async (req, res) => {
-  const { verificationToken } = req.params;
-  console.log('about to verify the account!')
 
+app.get('/verify/:verificationToken', async (req, res) => {
+  
+  console.log('about to verify the account!')
+  const { verificationToken } = req.params;
+  
   try {
     // Find the user with the matching verification token
     const user = await User.findOne({ verificationToken });
@@ -261,7 +263,7 @@ app.post('/login', async (req, res) => {
       const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
 
       // Set the token as a cookie in the response 
-      res.cookie('jwttoken', token, { httpOnly: true, maxAge: 3600000,sameSite: 'strict', secure: true, }); // Production - Max age set to 1 hour
+      res.cookie('jwttoken', token, { httpOnly: true, maxAge: 3600000,sameSite:'none', secure: true, }); // Production - Max age set to 1 hour
       // res.cookie('jwttoken', token, { httpOnly: true, maxAge: 3600000,sameSite:'lax', secure: false }); // Development - Max age set to 1 hour
 
       // Console log the generated cookie
