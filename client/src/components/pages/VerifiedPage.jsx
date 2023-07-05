@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const VerifiedPage = () => {
@@ -9,8 +9,15 @@ const VerifiedPage = () => {
     navigate('/user-profile');
   };
 
-  // Delay the redirect for 10 seconds
-  setTimeout(redirectToProfile, 10000);
+  useEffect(() => {
+    // Delay the redirect for 10 seconds
+    const redirectTimeout = setTimeout(redirectToProfile, 10000);
+
+    return () => {
+      // Clean up the timeout if the component unmounts before the timeout completes
+      clearTimeout(redirectTimeout);
+    };
+  }, []); // Empty dependency array ensures the effect runs only once
 
   return (
     <div className='text-white'>
