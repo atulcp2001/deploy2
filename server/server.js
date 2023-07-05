@@ -1,5 +1,5 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env') }); // comment it for production deployment
+// const path = require('path'); // comment for production
+// require('dotenv').config({ path: path.join(__dirname, '../.env') }); // comment it for production deployment
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -226,10 +226,12 @@ app.get('/verify/:verificationToken', async (req, res) => {
     user.isVerified = true;
     user.verificationToken = null; // Reset the verification token
     await user.save();
-
-    // Redirect the user to the main website or display a success message
-    res.redirect(`${process.env.CLIENT_URL}/verified`);
+    
     console.log('User verficiation complete!')
+    // Redirect the user to the main website or display a success message
+    
+    res.redirect(`${process.env.CLIENT_URL}/verified`);
+    
   } catch (error) {
     console.error('Error verifying user account:', error);
     res.status(500).json({ error: 'Server error' });
