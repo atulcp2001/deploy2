@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const serverUrl = "https://deploy2be.onrender.com"; // for production deployment
@@ -8,41 +8,34 @@ const serverUrl = "https://deploy2be.onrender.com"; // for production deployment
 const VerifiedPage = () => {
 
     const navigate = useNavigate();
+    const { verificationToken } = useParams();
 
     useEffect(() => {
-    // Redirect to the UserProfilePage after 10 seconds
-    const redirectTimeout = setTimeout(() => {
-      navigate('/user-profile');
-    }, 10000);
-
-    const checkAuthentication = async () => {
-      try {
-        const response = await fetch(`${serverUrl}/protected`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          // User is authenticated, clear the redirect timeout and redirect to the profile page
-          clearTimeout(redirectTimeout);
-          navigate('/user-profile');
-        } else {
-          // User is not authenticated, redirect to the login page
+      const verifyAccount = async () => {
+        try {
+          // Perform the account verification process here (e.g., API request to the server)
+          const response = await fetch(`${serverUrl}/verify/${verificationToken}`, {
+            method: 'GET',
+            credentials: 'include',
+          });
+  
+          if (response.ok) {
+            // Verification succeeded
+            setTimeout(() => {
+              navigate('/user-profile');
+            }, 10000);
+          } else {
+            // Verification failed
+            navigate('/login');
+          }
+        } catch (error) {
+          console.error('Error verifying account:', error);
           navigate('/login');
         }
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle the error, display a message, or perform any necessary action
-      }
-    };
-
-    checkAuthentication();
-
-
-    return () => {
-      clearTimeout(redirectTimeout);
-    };
-  }, [navigate]);
+      };
+  
+      verifyAccount();
+    }, [navigate, verificationToken]);
   
   return (
     <div className='text-white'>
