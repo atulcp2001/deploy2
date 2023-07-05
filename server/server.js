@@ -1,4 +1,4 @@
-// const path = require('path'); // comment for production
+const path = require('path'); 
 // require('dotenv').config({ path: path.join(__dirname, '../.env') }); // comment it for production deployment
 const express = require('express');
 const mongoose = require('mongoose');
